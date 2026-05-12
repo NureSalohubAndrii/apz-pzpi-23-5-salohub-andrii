@@ -1,0 +1,9 @@
+export enum QueryKey {
+  PROFILE = 'PROFILE',
+  MY_CARS = 'MY_CARS',
+  MY_STATS = 'MY_STATS',
+  MY_CARS_HISTORY = 'MY_CARS_HISTORY',
+  CAR = 'CAR',
+  REPORT = 'REPORT',
+  EVENTS = 'EVENTS',
+}

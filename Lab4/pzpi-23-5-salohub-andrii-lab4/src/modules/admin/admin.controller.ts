@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { AdminService } from './admin.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { ApiResponse } from '../../shared/types/response.type';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const adminService = new AdminService();
 
@@ -10,7 +11,7 @@ export class AdminController {
     try {
       const { userId } = req.params;
       const { reason } = req.body;
-      const result = await adminService.blockUser(userId, reason);
+      const result = await adminService.blockUser(routeParam(userId), reason);
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -20,7 +21,7 @@ export class AdminController {
   async unblockUser(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
       const { userId } = req.params;
-      const result = await adminService.unblockUser(userId);
+      const result = await adminService.unblockUser(routeParam(userId));
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -125,7 +126,7 @@ export class AdminController {
       const { carId } = req.params;
       const { isVerified, verificationNotes } = req.body;
       const adminId = req.userId!;
-      const result = await adminService.verifyCar(carId, adminId, {
+      const result = await adminService.verifyCar(routeParam(carId), adminId, {
         isVerified,
         verificationNotes,
       });

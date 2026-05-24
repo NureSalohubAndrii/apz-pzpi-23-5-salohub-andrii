@@ -47,4 +47,8 @@ export const vehicleChecksRelations = relations(vehicleChecks, ({ one }) => ({
     fields: [vehicleChecks.userId],
     references: [users.id],
   }),
+  car: one(cars, {
+    fields: [vehicleChecks.carId],
+    references: [cars.id],
+  }),
 }));

@@ -6,6 +6,7 @@ import { AppError } from '../../shared/middlewares/error.middleware';
 import { db } from '../../database';
 import { eq } from 'drizzle-orm';
 import { users } from '../../database/schema';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const authService = new AuthService();
 
@@ -48,7 +49,7 @@ export class AuthController {
     try {
       const { code } = req.body;
       const userId = req.params.userId;
-      const result = await authService.verifyEmail(userId, code);
+      const result = await authService.verifyEmail(routeParam(userId), code);
 
       res.json({
         success: true,

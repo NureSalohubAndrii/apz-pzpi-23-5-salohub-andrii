@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { EventsService } from './events.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { ApiResponse } from '../../shared/types/response.type';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const eventsService = new EventsService();
 
@@ -37,7 +38,7 @@ export class EventsController {
         endDate: req.query.endDate ? new Date(req.query.endDate as string) : undefined,
       };
 
-      const events = await eventsService.getCarEvents(req.params.carId, filters);
+      const events = await eventsService.getCarEvents(routeParam(req.params.carId), filters);
 
       res.json({
         success: true,
@@ -50,7 +51,11 @@ export class EventsController {
 
   async updateEvent(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
-      const event = await eventsService.updateEvent(req.params.eventId, req.body);
+      const event = await eventsService.updateEvent(
+        routeParam(req.params.eventId),
+        req.body,
+        req.userId!
+      );
 
       res.json({
         success: true,
@@ -64,7 +69,7 @@ export class EventsController {
 
   async deleteEvent(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
-      await eventsService.deleteEvent(req.params.eventId);
+      await eventsService.deleteEvent(routeParam(req.params.eventId));
 
       res.json({
         success: true,

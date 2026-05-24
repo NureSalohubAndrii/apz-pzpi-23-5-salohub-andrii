@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { CarsService } from './cars.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { ApiResponse } from '../../shared/types/response.type';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const carsService = new CarsService();
 
@@ -25,7 +26,7 @@ export class CarsController {
 
   async getCarByVIN(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
-      const car = await carsService.getCarByVIN(req.params.vin);
+      const car = await carsService.getCarByVIN(routeParam(req.params.vin));
 
       res.json({
         success: true,
@@ -38,7 +39,11 @@ export class CarsController {
 
   async updateCar(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
-      const car = await carsService.updateCar(req.params.id, req.body, req.userId!);
+      const car = await carsService.updateCar(
+        routeParam(req.params.id),
+        req.body,
+        req.userId!
+      );
 
       res.json({
         success: true,

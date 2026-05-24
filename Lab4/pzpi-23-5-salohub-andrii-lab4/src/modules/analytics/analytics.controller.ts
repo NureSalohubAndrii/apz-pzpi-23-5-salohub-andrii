@@ -3,6 +3,7 @@ import { AnalyticsService } from './analytics.service';
 import { ApiResponse } from '../../shared/types/response.type';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { AppError } from '../../shared/middlewares/error.middleware';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const analyticsService = new AnalyticsService();
 
@@ -11,7 +12,7 @@ export class AnalyticsController {
     try {
       const { carId } = req.params;
 
-      const result = await analyticsService.detectMileageAnomalies(carId);
+      const result = await analyticsService.detectMileageAnomalies(routeParam(carId));
 
       res.json({
         success: true,
@@ -35,7 +36,7 @@ export class AnalyticsController {
         throw new AppError(400, 'Days ahead must be between 1 and 3650 (10 years)');
       }
 
-      const result = await analyticsService.predictFutureMileage(carId, daysAhead);
+      const result = await analyticsService.predictFutureMileage(routeParam(carId), daysAhead);
 
       if (result.error) {
         throw new AppError(400, result.error);
@@ -84,7 +85,7 @@ export class AnalyticsController {
     try {
       const { userId } = req.params;
 
-      const result = await analyticsService.getUserBehaviorAnalytics(userId);
+      const result = await analyticsService.getUserBehaviorAnalytics(routeParam(userId));
 
       res.json({
         success: true,

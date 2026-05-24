@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { ApiResponse } from '../../shared/types/response.type';
 import { AppError } from '../../shared/middlewares/error.middleware';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const usersService = new UsersService();
 
@@ -36,11 +37,12 @@ export class UsersController {
 
   async getUserById(req: AuthRequest, res: Response<ApiResponse>, next: NextFunction) {
     try {
-      if (req.userRole !== 'admin' && req.userId !== req.params.id) {
+      const id = routeParam(req.params.id);
+      if (req.userRole !== 'admin' && req.userId !== id) {
         throw new AppError(403, 'Access denied');
       }
 
-      const user = await usersService.getUserById(req.params.id);
+      const user = await usersService.getUserById(id);
 
       res.json({
         success: true,

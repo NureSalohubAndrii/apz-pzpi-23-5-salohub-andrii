@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { IoTService } from './iot.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const iotService = new IoTService();
 
@@ -8,7 +9,7 @@ export class IoTController {
   async syncDevice(req: Request, res: Response, next: NextFunction) {
     try {
       const { vin } = req.params;
-      const result = await iotService.syncDevice(vin);
+      const result = await iotService.syncDevice(routeParam(vin));
       res.json({ success: true, data: result, message: 'Device synchronized successfully' });
     } catch (error) {
       next(error);
@@ -51,7 +52,7 @@ export class IoTController {
     try {
       const { vin } = req.params;
       const limit = parseInt(req.query.limit as string) || 100;
-      const result = await iotService.getTelemetryHistory(vin, limit);
+      const result = await iotService.getTelemetryHistory(routeParam(vin), limit);
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -61,7 +62,7 @@ export class IoTController {
   async getLatestTelemetry(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { vin } = req.params;
-      const result = await iotService.getLatestTelemetry(vin);
+      const result = await iotService.getLatestTelemetry(routeParam(vin));
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -72,7 +73,7 @@ export class IoTController {
     try {
       const { vin } = req.params;
       const days = parseInt(req.query.days as string) || 30;
-      const result = await iotService.getTelemetryStats(vin, days);
+      const result = await iotService.getTelemetryStats(routeParam(vin), days);
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -82,7 +83,7 @@ export class IoTController {
   async getTamperingHistory(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { vin } = req.params;
-      const result = await iotService.getTamperingHistory(vin);
+      const result = await iotService.getTamperingHistory(routeParam(vin));
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -92,7 +93,7 @@ export class IoTController {
   async getDeviceConfig(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { vin } = req.params;
-      const config = await iotService.getDeviceConfig(vin);
+      const config = await iotService.getDeviceConfig(routeParam(vin));
       res.json({ success: true, data: config });
     } catch (error) {
       next(error);
@@ -102,7 +103,7 @@ export class IoTController {
   async updateDeviceConfig(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { vin } = req.params;
-      const result = await iotService.updateDeviceConfig(vin, req.body);
+      const result = await iotService.updateDeviceConfig(routeParam(vin), req.body);
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);

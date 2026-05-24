@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { ReportsService } from './reports.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 import { ApiResponse } from '../../shared/types/response.type';
+import { routeParam } from '../../shared/utils/validation.util';
 
 const reportsService = new ReportsService();
 
@@ -11,7 +12,7 @@ export class ReportsController {
       const { vin } = req.params;
       const checkType = (req.query.type as 'basic' | 'extended' | 'premium') || 'basic';
 
-      const report = await reportsService.generateReport(vin, req.userId!, checkType);
+      const report = await reportsService.generateReport(routeParam(vin), req.userId!, checkType);
 
       res.json({
         success: true,

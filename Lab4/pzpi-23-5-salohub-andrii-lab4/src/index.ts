@@ -20,7 +20,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +56,8 @@ app.get('/health', (_, res) => {
     success: true,
     status: 'healthy',
     timestamp: new Date().toISOString(),
+    machineId: process.env.FLY_MACHINE_ID ?? 'local',
+    region: process.env.FLY_REGION ?? 'local',
   });
 });
 
@@ -62,8 +71,12 @@ app.use((_, res) => {
 });
 
 const PORT = Number(process.env.PORT) || 3000;
+const machineId = process.env.FLY_MACHINE_ID ?? 'local';
+const region = process.env.FLY_REGION ?? 'local';
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server listening on port ${PORT}`);
+  console.log(`Machine: ${machineId} (region: ${region})`);
   console.log(`Local:   http://localhost:${PORT}`);
   console.log(`Network: http://192.168.1.5:${PORT}`);
 });

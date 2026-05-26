@@ -17,7 +17,10 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "prepare": "husky",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "demo:scaling": "bash scripts/demo-scaling.sh",
+    "demo:single": "bash scripts/demo-single.sh",
+    "demo:compare": "bash scripts/demo-compare.sh"
   },
   "lint-staged": {
     "*.{ts,js}": [
